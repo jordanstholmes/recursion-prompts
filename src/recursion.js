@@ -62,42 +62,10 @@ var arraySum = function(array) {
 
 // 4. Check if a number is even.
 var isEven = function(n) {
-  /*
-  BASE CASE: if n === 2 return true
-             else if n < 2 return false
-  RECURSIVE: if (! even) {return isEven(n)}
-  6 is divisible by 2
-  6
-  2 + 2 + 2 = 6
-  2 + 2 + 2 + 1 = 7
-  2 + 2 = 4
-  2 + 1 = 3
-  2 + 2 + 2 + 2 + 1 = 9
-  0 + 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
-
-  Math.abs(n) 10 -10 10
-  10 8 6 4 2 true
-  11 9 7 5 3 1 false
-
-  n / 2 = v 3.87
-  Math.floor(v) 3
-  if (3.87 - 3 === 0)
-
-  var m = n/2;
-  var v = Math.floor(m) - n;
-  if (v === 0) {
-    return true;
-  } else {
-    return isEven(n);
-  }
-  */
-  if (n === 2) {
-    return true;
-  } else if (n >= 0 || n < 2) {
-    return false;
-  } else if (n < 0) {
-    var abs = Math.abs(n);
-    return isEven(abs);
+  if (n < 0) {
+    return isEven(Math.abs(n));
+  } else if (n === 0 || n === 1) {
+    return n === 0;
   } else {
     return isEven(n - 2);
   }
@@ -107,18 +75,80 @@ var isEven = function(n) {
 // 5. Sum all integers below a given integer.
 // sumBelow(10); // 45
 // sumBelow(7); // 21
-var sumBelow = function(n) {};
+// 1 + 2 = [3] + 3 = [6] + 4 = [10] + 5 = [15] + 6 = [21]
+// Not inclusive
+var sumBelow = function(n) {
+  // var n2 = Math.abs(n);
+  // if (n2 === 0 || n2 === 1) {
+  //   return 0;
+  // } else {
+  //   return n2/n * ((n2 - 1) + sumBelow(n2 - 1));
+  // }
+
+  // var adjuster = n < 0 ? -1 : 1;
+  // if (n === 0) {
+  //   return 0;
+  // } else {
+  //   return n - adjuster + sumBelow(n - adjuster);
+  // }
+
+
+  if (n === 0) {
+    return 0;
+  } else {
+    var nextInt = n < 0 ? n + 1 : n - 1;
+    return nextInt + sumBelow(nextInt);
+  }
+};
 
 // 6. Get the integers within a range (x, y).
 // range(2,9); // [3,4,5,6,7,8]
-var range = function(x, y) {};
+// non-inclusive
+// (-4, -1) > [-3, -2]
+// (-2, 2) > [-1, 0, 1]
+// (-1, -4) > [-2, -3]
+// (2, 2) > []
+// (2, 3) > []
+var range = function(x, y) {
+  var absoluteDiff = Math.abs(y - x);
+
+  if (absoluteDiff <= 1) {
+    return [];
+  } else {
+     var nextX = x < y ? x + 1 : x - 1;
+    return [nextX].concat(range(nextX, y));
+  } 
+};
+  // requirements
+  // works if x > y or y > x; so range can increment or decrement
+  // not include of either x or y
+  // no integers in between two (contiguous elements), returns empty array
+  // negative values are valid
+  // function(x, y) = returns array of integers between x and y
+
+
+  // if (Math.abs(y - x) < 1) {
+  //   return [];
+  // }
+  // var smaller = x < y ? x : y;
+  // if (Math.abs(y - x) === 2) {
+  //   return [smaller + 1];
+  // } else {
+  //   return [smaller + 1].concat(range());
+  // }
 
 // 7. Compute the exponent of a number.
 // The exponent of a number says how many times the base number is used as a factor.
 // 8^2 = 8 x 8 = 64. Here, 8 is the base and 2 is the exponent.
 // exponent(4,3); // 64
 // https://www.khanacademy.org/computing/computer-science/algorithms/recursive-algorithms/a/computing-powers-of-a-number
-var exponent = function(base, exp) {};
+var exponent = function(base, exp) {
+  if (exp === 0) {
+    return 1;
+  } else {
+    return base * exponent(base, exp - 1)
+  }
+};
 
 // 8. Determine if a number is a power of two.
 // powerOfTwo(1); // true
