@@ -422,11 +422,32 @@ var nthFibo = function(n) {
 // 27. Given an array of words, return a new array containing each word capitalized.
 // var words = ['i', 'am', 'learning', 'recursion'];
 // capitalizedWords(words); // ['I', 'AM', 'LEARNING', 'RECURSION']
-var capitalizeWords = function(array) {};
+
+var capitalizeWords = function(array) {
+  if (array.length === 0) {
+    return [];
+  } else {
+    return [array[0].toUpperCase()].concat(capitalizeWords(array.slice(1)));
+  }
+};
 
 // 28. Given an array of strings, capitalize the first letter of each index.
 // capitalizeFirst(['car','poop','banana']); // ['Car','Poop','Banana']
-var capitalizeFirst = function(array) {};
+
+var capitalizeWord = function(string) {
+  var result = '';
+
+  result += string[0].toUpperCase() + string.slice(1);
+  return result;
+}
+
+var capitalizeFirst = function(array) {
+  if (array.length === 0) {
+    return [];
+  } else {
+    return [capitalizeWord(array[0])].concat(capitalizeFirst(array.slice(1)));
+  }
+};
 
 // 29. Return the sum of all even numbers in an object containing nested objects.
 // var obj1 = {
@@ -437,11 +458,33 @@ var capitalizeFirst = function(array) {};
 //   e: {e: {e: 2}, ee: 'car'}
 // };
 // nestedEvenSum(obj1); // 10
-var nestedEvenSum = function(obj) {};
+
+var nestedEvenSum = function(obj) {
+  var sum = 0;
+  for (var key in obj) {
+    if (obj[key] % 2 === 0) {
+      sum += obj[key];
+    }
+    if (typeof obj[key] === 'object') {
+      sum += nestedEvenSum(obj[key]);
+    }
+  }
+  return sum;
+};
 
 // 30. Flatten an array containing nested arrays.
 // flatten([1,[2],[3,[[4]]],5]); // [1,2,3,4,5]
-var flatten = function(array) {};
+
+var flatten = function(array) {
+  if (array.length === 0) {
+    return [];
+  }
+  if (Array.isArray(array[0])) {
+    return flatten(array[0]).concat(flatten(array.slice(1)));
+  } else {
+    return [array[0]].concat(flatten(array.slice(1)));
+  };
+};
 
 // 31. Given a string, return an object containing tallies of each letter.
 // letterTally('potato'); // {p:1, o:2, t:2, a:1}
