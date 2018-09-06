@@ -133,28 +133,9 @@ var reverse = function(string) {
 };
 
 // 10. Write a function that determines if a string is a palindrome.
-// "Race car" > ['race', 'car'] ['r', 'a', 'c', 'e', ' ', 'c', 'a', 'r']
-
-// racecar r-----r
-//  aceca   a---a              substring(1, string.length - 1)
-//   cec     c-c
-//    e       e  true
-
-
-
-/*
- if the first letter and the last letter are the same, AND everything between them is a palindrome, then the whole thing is a palindrome
--cec-
- -e-
-'e'
-
-*/
-
-// acecar + r === string
-// (acecar) false + r === string
 
 var palindrome = function(string) {
-  string = string.split(' ').join('').toUpperCase();
+  string = string.split(' ').join('').toLowerCase();
 
   if (string.length === 1 || string === '') {
     return true;
@@ -167,7 +148,6 @@ var palindrome = function(string) {
   } else {
     return false;
   }
-  // return palindrome(string.substring(1)) + string.charAt(0)
 };
 
 // 11. Write a function that returns the remainder of x divided by y without using the
@@ -175,20 +155,8 @@ var palindrome = function(string) {
 // modulo(5,2) // 1
 // modulo(17,5) // 2
 // modulo(22,6) // 4
-// 2 % 1
-
-
-// -5 % -2 >> -3 % 2 >> -1 % 2 >> -1
-// if x is negative then return modulo of abs(x), abs(y)
-
-
 
 var modulo = function(x, y) {
-  var sign = x < 0 ? -1 : 1;
-
-  x = x < 0 ? -x : x;
-  y = y < 0 ? -y : y;
-
 
   if (y === 0) {
     return NaN;
@@ -199,15 +167,17 @@ var modulo = function(x, y) {
   if (x < y && x > 0) {
     return x;
   }
-  if (x > 0 && y > 0) {
+  if ((x > 0 && y > 0) || (x < 0 && y < 0 && x < y)) {
     return modulo(x - y, y);
   }
-  if (x < 0) {
-    return -modulo(Math.abs(x) - Math.abs(y), y);
+  if (x < 0 && y < 0 && x > y) {
+    return x;
   }
-  // if (x < 0 && y > 0) {
-  //   return modulo(x + y, y)
-  // }
+  if (x < 0 && y > 0 && -x < y) {
+    return x
+  } else {
+    return modulo(x + y, y);
+  }
 };
 
 // 12. Write a function that multiplies two numbers without using the * operator or
@@ -251,47 +221,154 @@ var divide = function(x, y) {
 // gcd(4,36); // 4
 // http://www.cse.wustl.edu/~kjg/cse131/Notes/Recursion/recursion.html
 // https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/the-euclidean-algorithm
-var gcd = function(x, y) {};
+var gcd = function(x, y) {
+  if (x < 0 || y < 0) {
+    return null
+  }
+  if (x % y === 0) {
+    return y;
+  } else {
+    return gcd(y, x % y)
+  };
+};
 
 // 15. Write a function that compares each character of two strings and returns true if
 // both are identical.
 // compareStr('house', 'houses') // false
 // compareStr('tomato', 'tomato') // true
-var compareStr = function(str1, str2) {};
+var compareStr = function(str1, str2) {
+  if (str1 === '' && str2 === '') {
+    return true;
+  }
+  if (str1.charAt(0) !== str2.charAt(0)) {
+    return false;
+  }
+  return compareStr(str1.substring(1), str2.substring(1));
+};
 
 // 16. Write a function that accepts a string and creates an array where each letter
 // occupies an index of the array.
-var createArray = function(str) {};
+var createArray = function(str) {
+  if (str === '') {
+    return [];
+  }
+  return [str[0]].concat(createArray(str.substring(1)));
+};
 
 // 17. Reverse the order of an array
-var reverseArr = function(array) {};
+var reverseArr = function(array) {
+  if (array.length === 0) {
+    return [];
+  };
+  return reverseArr(array.slice(1)).concat(array[0]);
+};
 
 // 18. Create a new array with a given value and length.
 // buildList(0,5) // [0,0,0,0,0]
 // buildList(7,3) // [7,7,7]
-var buildList = function(value, length) {};
+var buildList = function(value, length) {
+  if (length === 0) {
+    return [];
+  };
+  return [value].concat(buildList(value, length - 1));
+};
 
 // 19. Implement FizzBuzz. Given integer n, return an array of the string representations of 1 to n.
 // For multiples of three, output 'Fizz' instead of the number.
 // For multiples of five, output 'Buzz' instead of the number.
 // For numbers which are multiples of both three and five, output “FizzBuzz” instead of the number.
 // fizzBuzz(5) // ['1','2','Fizz','4','Buzz']
-var fizzBuzz = function(n) {};
+var fizzBuzz = function(n) {
+  var arr = [];
+  var output = n
+
+  if (n === 0) {
+    return arr;
+  }
+  if (n % 3 === 0 && n % 5 !== 0) {
+    output = 'Fizz';
+  }
+  if (n % 5 === 0 && n % 3 !== 0) {
+    output = 'Buzz';
+  }
+  if (n % 3 === 0 && n % 5 === 0) {
+    output = 'FizzBuzz';
+  }
+  arr.push(output.toString());
+
+  return fizzBuzz(n - 1).concat(arr);
+};
 
 // 20. Count the occurence of a value in a list.
 // countOccurrence([2,7,4,4,1,4], 4) // 3
 // countOccurrence([2,'banana',4,4,1,'banana'], 'banana') // 2
-var countOccurrence = function(array, value) {};
+var countOccurrence = function(array, value) {
+  if (array.length === 0) {
+    return 0;
+  }
+  if (array[0] === value) {
+    return 1 + countOccurrence(array.slice(1), value);
+  } else {
+    return 0 + countOccurrence(array.slice(1), value);
+  }
+};
 
 // 21. Write a recursive version of map.
 // rMap([1,2,3], timesTwo); // [2,4,6]
-var rMap = function(array, callback) {};
+/*
+  BASE CASE: empty array (return empty array)
+  RECURSIVE CASE:
+  iterate through each element (using recursion)
+    apply the callback on each element
+    return the new element
+
+  RETURN TYPE: Array
+*/
+var rMap = function(array, callback) {
+  if (array.length === 0) {
+    return [];
+  } else {
+    return [callback(array[0])].concat(rMap(array.slice(1), callback));
+  }
+};
 
 // 22. Write a function that counts the number of times a key occurs in an object.
 // var obj = {'e':{'x':'y'},'t':{'r':{'e':'r'},'p':{'y':'r'}},'y':'e'};
 // countKeysInObj(obj, 'r') // 1
 // countKeysInObj(obj, 'e') // 2
-var countKeysInObj = function(obj, key) {};
+
+
+/*
+  BASE CASE: if obj is empty or key isn't provided or obj is not an object, return 0
+
+  RECURSIVE:
+  declare count variable
+  for each property in obj
+    if the property === searchingFor
+      increment our count
+    if the value at that property is an object
+      call countKeysInObj on that value and add result to count variable
+  return count
+
+
+  var obj = {a: 1, b:{a: 1, b: 6}, b: 3} Count: 1
+                                   ^
+            {a: 1, b: 6} Count: 1
+                      ^
+
+*/
+var countKeysInObj = function(obj, searchingFor) {
+  var count = 0;
+  for (var key in obj) {
+    if (key === searchingFor) {
+      count++;
+    }
+    if (typeof obj[key] === 'object') {
+      count += countKeysInObj(obj[key], searchingFor);
+    }
+  }
+  return count;
+};
 
 // 23. Write a function that counts the number of times a value occurs in an object.
 // var obj = {'e':{'x':'y'},'t':{'r':{'e':'r'},'p':{'y':'r'}},'y':'e'};
