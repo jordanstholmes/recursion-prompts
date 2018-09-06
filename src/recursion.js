@@ -488,35 +488,168 @@ var flatten = function(array) {
 
 // 31. Given a string, return an object containing tallies of each letter.
 // letterTally('potato'); // {p:1, o:2, t:2, a:1}
-var letterTally = function(str, obj) {};
+
+var letterTally = function(str, obj = {}) {
+  if (str === '') {
+    return null;
+  }
+  if (!obj.hasOwnProperty(str[0])) {
+    obj[str[0]] = 1;
+  } else {
+    obj[str[0]] += 1;
+  }
+  letterTally(str.slice(1), obj);
+  return obj;
+};
 
 // 32. Eliminate consecutive duplicates in a list. If the list contains repeated
 // elements they should be replaced with a single copy of the element. The order of the
 // elements should not be changed.
 // compress([1,2,2,3,4,4,5,5,5]) // [1,2,3,4,5]
 // compress([1,2,2,3,4,4,2,5,5,5,4,4]) // [1,2,3,4,2,5,4]
-var compress = function(list) {};
+
+var compress = function(list) {
+  if (list.length === 0) {
+    return [];
+  }
+  if (list[0] === list[1]) {
+    return compress(list.slice(1));
+  } else {
+    return [list[0]].concat(compress(list.slice(1)));
+  }
+};
 
 // 33. Augument every element in a list with a new value where each element is an array
 // itself.
 // augmentElements([[],[3],[7]], 5); // [[5],[3,5],[7,5]]
-var augmentElements = function(array, aug) {};
+
+var augmentElements = function(array, aug) {
+  if (array.length === 0) {
+    return [];
+  } else {
+    var currentElement = array[0].slice();
+    currentElement.push(aug);
+    var theRestOfArray = augmentElements(array.slice(1), aug);
+    var result = [currentElement].concat(theRestOfArray);
+    // return [currentElement.push(aug)].concat(augmentElements(array.slice(1), aug));
+    return result;
+  }
+};
 
 // 34. Reduce a series of zeroes to a single 0.
 // minimizeZeroes([2,0,0,0,1,4]) // [2,0,1,4]
 // minimizeZeroes([2,0,0,0,1,0,0,4]) // [2,0,1,0,4]
-var minimizeZeroes = function(array) {};
+var minimizeZeroes = function(array) {
+  if (array.length === 0) {
+    return [];
+  }
+  if (array[0] === 0 && array[1] === 0) {
+    return minimizeZeroes(array.slice(1));
+  } else {
+    return [array[0]].concat(minimizeZeroes(array.slice(1)));
+  }
+};
 
 // 35. Alternate the numbers in an array between positive and negative regardless of
 // their original sign. The first number in the index always needs to be positive.
 // alternateSign([2,7,8,3,1,4]) // [2,-7,8,-3,1,-4]
 // alternateSign([-2,-7,8,3,-1,4]) // [2,-7,8,-3,1,-4]
-var alternateSign = function(array) {};
+
+/*
+  BASE: if array is empty return empty array
+  RECURSIVE:
+    - smaller and smaller arrays
+    [+0, -1, +2, -3, +4]
+    array[0] n + 2
+    array[1] n + 2
+    +[+v1, -v2] + [the rest]
+      [+v3, -v4] + [the rest]
+
+  create an newArray and assaign an empty array
+  if array empty return empty newArray
+  if array[0] < 0
+    array[0] *= -1;
+    newArray.push(array[0])
+    else newArray.push(array[0])
+ if array[1] > 0
+  array[1] *= -1;
+  newArray.push(array[1])
+  else newArray.push(array[1])
+  slicing first two values and passing the remaining through recursive function
+  return newArray
+
+(change the value or not)
+then push the value
+
+
+*/
+var alternateSign = function(array) {
+  var newArray = [];
+  if (array.length === 0) {
+    return newArray;
+  }
+
+  if (array[0] < 0) {
+    array[0] *= -1;
+  }
+  newArray.push(array[0]);
+
+  if (array[1] > 0) {
+    array[1] *= -1;
+  }
+  newArray.push(array[1]);
+
+  return [newArray[0], newArray[1]].concat(alternateSign(array.slice(2)));
+};
 
 // 36. Given a string, return a string with digits converted to their word equivalent.
 // Assume all numbers are single digits (less than 10).
 // numToText("I have 5 dogs and 6 ponies"); // "I have five dogs and six ponies"
-var numToText = function(str) {};
+
+/*
+  BASE CASE: if empty string return empty string ''
+  RECURSION: slice through until we hit a number
+
+"I have 5 dogs and 6 ponies"
+      ^
+ 5 ==> str[5]
+
+FINAL STRING: + 'a' + 'five'
+ 'a5' >> 'afive'
+
+'m' + 'y 5 dogs and 6 ponies'
+'y' + ' 5 dogs and 6 ponies'
+
+'5' + ' dogs and 6 ponies'
+numbers[5]
+
+  PSEDUO:
+  if it's a number
+    convert to the text value
+
+    var str = 'dog'
+    "D" += str.slice()
+
+
+    "5 dogs and"
+     ^
+
+
+*/
+var numToText = function(str) {
+  var numbers = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+
+  if (str === '') {
+    return '';
+  }
+  if (typeof Number(str[0]) === 'number') { // typeof '5' === 'string'
+    // numbers[Number(str[0])] += str.slice(1);
+    var newStr = numbers[Number(str[0])] + str.slice(1);
+    //              'five' + ' dogs and'
+    numbers[Number(str[0])] = numbers[Number(str[0])] + str.slice(1);
+  }
+  return numToText(str.slice(1));
+};
 
 
 // *** EXTRA CREDIT ***
