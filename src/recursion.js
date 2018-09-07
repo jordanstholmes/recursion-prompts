@@ -643,13 +643,53 @@ var numToText = function(str) {
 // *** EXTRA CREsDIT ***
 
 // 37. Return the number of times a tag occurs in the DOM.
-var tagCount = function(tag, node) {};
+var tagCount = function(tag, node = document.documentElement) {
+
+  var count = 0;
+  if (node.tagName === tag.toUpperCase()) {count++;}
+  
+  if (node.hasChildNodes()) {
+    for (var child of node.children) {
+      count += tagCount(tag, child);
+    }
+  }
+  return count;
+};
 
 // 38. Write a function for binary search.
 // var array = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
 // binarySearch(array, 5) // 5
 // https://www.khanacademy.org/computing/computer-science/algorithms/binary-search/a/binary-search
-var binarySearch = function(array, target, min, max) {};
+
+/*
+TARGET: 5
+[00,01,03,04,05,06,07,08,09,10,11,12,13,14,15];
+  ^                 ^                       ^
+00,01,03,04,05,06,
+       ^
+00,01
+^  ^
+^
+[-6,-5,-4,-3,-2,-1];
+-3,-2,-1
+
+*/
+//
+var binarySearch = function(array, target, min = 0, max = array.length - 1) {
+
+  var searchIdx = Math.floor((max + min) / 2);
+
+  if (array[searchIdx] === target) {
+    return searchIdx;
+  } else if (min === max || max === -1) {
+    return null;
+  } else if (array[searchIdx] > target) {
+    return binarySearch(array, target, min, searchIdx - 1);
+  } else if (array[searchIdx] < target) {
+    return binarySearch(array, target, searchIdx + 1, max);
+  }
+
+};
 
 // 39. Write a merge sort function.
 // mergeSort([34,7,23,32,5,62]) // [5,7,23,32,34,62]
