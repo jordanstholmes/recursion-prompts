@@ -632,8 +632,8 @@ var numToText = function(str) {
   var firstChar = str[0]; // 'm'
   if (str === '') {
     return '';
-  } // Number(' ') >> 0
-  if (typeof parseInt(firstChar) === 'number') {
+  }
+  if (!Number.isNaN(parseInt(firstChar))) {
     firstChar = numbers[parseInt(firstChar)];
   }
   return firstChar + numToText(str.slice(1));
