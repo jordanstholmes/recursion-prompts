@@ -555,34 +555,6 @@ var minimizeZeroes = function(array) {
 // alternateSign([2,7,8,3,1,4]) // [2,-7,8,-3,1,-4]
 // alternateSign([-2,-7,8,3,-1,4]) // [2,-7,8,-3,1,-4]
 
-/*
-  BASE: if array is empty return empty array
-  RECURSIVE:
-    - smaller and smaller arrays
-    [+0, -1, +2, -3, +4]
-    array[0] n + 2
-    array[1] n + 2
-    +[+v1, -v2] + [the rest]
-      [+v3, -v4] + [the rest]
-
-  create an newArray and assaign an empty array
-  if array empty return empty newArray
-  if array[0] < 0
-    array[0] *= -1;
-    newArray.push(array[0])
-    else newArray.push(array[0])
- if array[1] > 0
-  array[1] *= -1;
-  newArray.push(array[1])
-  else newArray.push(array[1])
-  slicing first two values and passing the remaining through recursive function
-  return newArray
-
-(change the value or not)
-then push the value
-
-
-*/
 var alternateSign = function(array) {
   var newArray = [];
   if (array.length === 0) {
@@ -633,26 +605,42 @@ numbers[5]
 
     "5 dogs and"
      ^
+// my 5 dogs and 6 ponies
+'m' + 'y' + ' ' + 'five' + ' dogs and 6 ponies'
+  'y' + ' 5 dogs and 6 ponies'
+    ' ' + '5 dogs and 6 ponies'
+      '5' + ' dogs and 6 ponies'
+
+progressively smaller strings:
+look at the first character in the string
+if its a number, convert it to the number/word equivalent
+and add it to the rest of the string, where the rest of the string has had all of its numbers converted
+
+'m5m' = convert(m) + numToText('5m')
+convert(5m) = 'five' + 'm'
+convert(m) = m + ''
+convert('') = ''
 
 
+
+str = newChar str[0] +
+
+"5 dogs and"
 */
 var numToText = function(str) {
   var numbers = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
-
+  var firstChar = str[0]; // 'm'
   if (str === '') {
     return '';
+  } // Number(' ') >> 0
+  if (typeof parseInt(firstChar) === 'number') {
+    firstChar = numbers[parseInt(firstChar)];
   }
-  if (typeof Number(str[0]) === 'number') { // typeof '5' === 'string'
-    // numbers[Number(str[0])] += str.slice(1);
-    var newStr = numbers[Number(str[0])] + str.slice(1);
-    //              'five' + ' dogs and'
-    numbers[Number(str[0])] = numbers[Number(str[0])] + str.slice(1);
-  }
-  return numToText(str.slice(1));
+  return firstChar + numToText(str.slice(1));
 };
 
 
-// *** EXTRA CREDIT ***
+// *** EXTRA CREsDIT ***
 
 // 37. Return the number of times a tag occurs in the DOM.
 var tagCount = function(tag, node) {};
